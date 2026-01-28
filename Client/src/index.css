@@ -1,6 +1,3 @@
-/* ===========================
-   1. GLOBAL RESET & BACKGROUND
-   =========================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,7 +6,6 @@
 }
 
 body {
-  /* Deep Modern Purple/Blue Gradient */
   background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   color: white;
   height: 100vh;
@@ -20,12 +16,8 @@ body {
   overflow: hidden;
 }
 
-/* ===========================
-   2. LOGIN / JOIN ROOM SCREEN
-   =========================== */
 .join_room {
   width: 500px;
-  /* Glassmorphism Card */
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -86,9 +78,6 @@ body {
   transform: scale(1.05);
 }
 
-/* ===========================
-   3. CHAT SCREEN (CONTAINER)
-   =========================== */
 .chat_container {
   display: flex;
   justify-content: center;
@@ -100,7 +89,6 @@ body {
 .chat_box {
   width: 600px;
   height: 80vh;
-  /* Glassmorphism Effect */
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -112,19 +100,15 @@ body {
   overflow: hidden;
 }
 
-/* ===========================
-   4. MESSAGE SCROLL AREA
-   =========================== */
 .chat_body_scroll {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Reduced gap between messages */
+  gap: 10px;
 }
 
-/* Scrollbar Styling */
 .chat_body_scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -133,15 +117,11 @@ body {
   border-radius: 10px;
 }
 
-/* ===========================
-   5. MESSAGE BUBBLES
-   =========================== */
 .message_content {
   display: flex;
   width: 100%;
 }
 
-/* YOU (Sender) */
 #you {
   justify-content: flex-end;
 }
@@ -150,16 +130,14 @@ body {
   background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
   color: white;
   border-radius: 15px 15px 0 15px;
-  /* FIXED: Smaller padding for normal height */
   padding: 8px 14px; 
   max-width: 75%;
   word-wrap: break-word;
   box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
   font-size: 0.95rem;
-  line-height: 1.4; /* Better text spacing */
+  line-height: 1.4;
 }
 
-/* OTHER (Receiver) */
 #other {
   justify-content: flex-start;
 }
@@ -168,7 +146,6 @@ body {
   background: rgba(255, 255, 255, 0.15);
   color: #e0e0e0;
   border-radius: 15px 15px 15px 0;
-  /* FIXED: Smaller padding for normal height */
   padding: 8px 14px;
   max-width: 75%;
   word-wrap: break-word;
@@ -186,11 +163,8 @@ body {
   opacity: 0.7;
 }
 
-/* ===========================
-   6. FOOTER INPUT
-   =========================== */
 .chat_footer {
-  height: 70px; /* Slightly smaller footer */
+  height: 70px;
   padding: 0 15px;
   display: flex;
   align-items: center;
