@@ -1,25 +1,25 @@
 # =========================
 # Dependencies
 # =========================
-client/node_modules/
-server/node_modules/
+Client/node_modules/
+Server/node_modules/
 
 # =========================
 # Build outputs
 # =========================
-client/build/
-client/dist/
-server/dist/
+Client/build/
+Client/dist/
+Server/dist/
 
 # =========================
 # Environment variables
 # =========================
 .env
 .env.*
-client/.env
-client/.env.*
-server/.env
-server/.env.*
+Client/.env
+Client/.env.*
+Server/.env
+Server/.env.*
 
 # =========================
 # Logs
