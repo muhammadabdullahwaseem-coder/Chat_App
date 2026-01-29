@@ -4,6 +4,7 @@ import { Server } from 'socket.io'
 import http from 'http'
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
     app.get("/", (req, res) => {
   res.send("<h1>Server is Running Successfully! </h1>");
@@ -29,7 +30,6 @@ io.on("connection",(socket)=>{console.log(socket.id)
         console.log("User Disconnected..",socket.id)
     })
 });
-app.use(cors());
 // Listen on Railway's dynamic port
 const PORT = process.env.PORT || 1000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
