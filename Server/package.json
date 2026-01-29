@@ -10,5 +10,17 @@
     "cors": "^2.8.6",
     "express": "^4.22.1",
     "socket.io": "^4.8.3"
-  }
+  },
+  "description": "\"# Server-Socket-io-Chat-app\"",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app/issues"
+  },
+  "homepage": "https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app#readme"
 }
