@@ -11,9 +11,11 @@ const server = http.createServer(app);
 });
 const io = new Server(server, {
   cors: {
-    // origin: "http://localhost:5173",
-    origin: "*", 
-    methods: ["GET", "PUT", "POST"],
+    origin: [
+      "http://localhost:5173",              
+      "https://chat-app-socket-io-mj0n.onrender.com/" // ADD YOUR NEW RENDER FRONTEND LINK HERE
+    ],
+    methods: ["GET", "POST"],
   },
 });
 io.on("connection",(socket)=>{console.log(socket.id)
