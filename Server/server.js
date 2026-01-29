@@ -13,7 +13,7 @@ const io = new Server(server, {
   cors: {
     // origin: "http://localhost:5173",
     origin: "*", 
-    methods: ["GET", "PUT"],
+    methods: ["GET", "PUT", "POST"],
   },
 });
 io.on("connection",(socket)=>{console.log(socket.id)
