@@ -11,11 +11,11 @@
   padding: 0;
   font-family: 'GC EpicPro', sans-serif !important;
 }
-*/
+
 .message_bubble, 
 .message_bubble p {
 
-  font-family:  'Helvetica Neue', Arial, sans-serif !important;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
   
 
   letter-spacing: 0.3px; 

@@ -7,6 +7,7 @@ import abcd from  '../src/assets/abcd.mp3'
 const socket = io.connect("http://localhost:1000")
 
 const App = () => {
+const socket = io.connect(import.meta.env.VITE_SERVER_URL);
 
 const [username, setUsername] = useState("");
 const [room, setRoom] = useState("");
