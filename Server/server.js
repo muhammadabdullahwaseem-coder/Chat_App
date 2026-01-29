@@ -17,7 +17,7 @@ io.on("connection",(socket)=>{console.log(socket.id)
         console.log(`User ID :- ${socket.id} joined room : ${data}`)
     })
     app.get("/", (req, res) => {
-  res.send("<h1>Server is Running Successfully! 🚀</h1>");
+  res.send("<h1>Server is Running Successfully! </h1>");
 });
 
     socket.on("send_message",(data)=>{console.log("send message data ",data)
