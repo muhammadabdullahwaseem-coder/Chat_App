@@ -2,21 +2,34 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
-import mongoose from 'mongoose'; // 1. Import Mongoose
-import dotenv from 'dotenv'; 
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-dotenv.config(); // Load .env file
+// Load environment variables
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 2. CONNECT TO MONGODB
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
+// --- DEBUGGER: Check if .env is loaded ---
+console.log("---------------------------------------------------");
+console.log("🔍 Checking Environment Variables...");
+if (!process.env.MONGO_URL) {
+  console.error("❌ ERROR: MONGO_URL is missing or undefined.");
+  console.error("   1. Do you have a file named .env in the root folder?");
+  console.error("   2. Does it contain: MONGO_URL=your_string_here?");
+} else {
+  console.log("✅ MONGO_URL found. Attempting to connect...");
+}
+console.log("---------------------------------------------------");
+// -----------------------------------------
 
-// 3. DEFINE A MESSAGE SCHEMA
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("✅ Connected to MongoDB Successfully"))
+  .catch((err) => console.error("❌ Could not connect to MongoDB:", err));
+
 const messageSchema = new mongoose.Schema({
   room: String,
   author: String,
@@ -40,38 +53,25 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log('New socket connected:', socket.id);
 
-  // join a chat room & LOAD HISTORY
   socket.on("join_room", async (room) => {
     socket.join(room);
     console.log(`User ID: ${socket.id} joined room: ${room}`);
-
-    // Operation 1: READ (Fetch History)
     try {
-      // Find messages for this specific room
       const history = await Message.find({ room: room });
-      
-      // Emit an event ONLY to the user who just joined
-      socket.emit("load_messages", history); 
+      socket.emit("load_messages", history);
     } catch (err) {
       console.error("Error fetching history:", err);
     }
   });
 
-  // relay messages & SAVE TO DB
   socket.on("send_message", async (data) => {
-    console.log("send message data", data);
-    
-    // Operation 2: CREATE (Save Message)
     const newMessage = new Message({
       room: data.room,
       author: data.author,
       message: data.message,
       time: data.time
     });
-
-    await newMessage.save(); // Save to MongoDB
-
-    // Send to everyone else in the room
+    await newMessage.save();
     socket.to(data.room).emit("receive_message", data);
   });
 
@@ -80,5 +80,5 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 1000;
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => console.log(`🚀 Server is running on port ${PORT}`));
