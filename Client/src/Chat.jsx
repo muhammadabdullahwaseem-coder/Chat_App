@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import music from "../src/assets/abcd.mp3";
+import notificationSound from './notification.mp3';
 
 export const Chat = ({ socket, username, room }) => {
-  // FIXED: Standardized camelCase for 'setCurrentMessage'
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
-
   const notification = new Audio(music);
-  // FIXED: Renamed ref to be clearer, but 'containRef' works too
   const containRef = useRef(null);
-
   const sendMessage = async () => {
     if (currentMessage !== "" && currentMessage !== " ") {
       const messageData = {
@@ -22,38 +19,35 @@ export const Chat = ({ socket, username, room }) => {
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-
       await socket.emit("send_message", messageData);
       setMessageList((list) => [...list, messageData]);
-      setCurrentMessage(""); // FIXED: Matches the state setter name
+      setCurrentMessage("");
       notification.play();
     }
   };
-
   useEffect(() => {
-    const handleReceiveMsg = (data) => {
+    const receiveMessageHandler = (data) => {
       setMessageList((list) => [...list, data]);
-      notification.play(); // Optional: Play sound on receive too
+      new Audio(notificationSound).play().catch(err => console.log("Audio play failed:", err));
     };
-    socket.on("receive_message", handleReceiveMsg);
-
+    const loadMessagesHandler = (history) => {
+      setMessageList(history); 
+    };
+    socket.on("receive_message", receiveMessageHandler);
+    socket.on("load_messages", loadMessagesHandler);
     return () => {
-      socket.off("receive_message", handleReceiveMsg);
+      socket.off("receive_message", receiveMessageHandler);
+      socket.off("load_messages", loadMessagesHandler);
     };
   }, [socket]);
-
-  // FIXED: Added safety check to prevent crash if ref is null
   useEffect(() => {
     if (containRef.current) {
       containRef.current.scrollTop = containRef.current.scrollHeight;
     }
   }, [messageList]);
-
   return (
     <div className="chat_container">
       <div className="chat_box">
-        
-        {/* FIXED: Added ref={containRef} here so scrolling works */}
         <div className="chat_body_scroll" ref={containRef}>
           {messageList.map((messageContent, index) => {
             return (
@@ -73,7 +67,6 @@ export const Chat = ({ socket, username, room }) => {
             );
           })}
         </div>
-
         <div className="chat_footer">
           <input
             type="text"
@@ -92,7 +85,6 @@ export const Chat = ({ socket, username, room }) => {
   </svg>
 </button>
         </div>
-        
       </div>
     </div>
   );
