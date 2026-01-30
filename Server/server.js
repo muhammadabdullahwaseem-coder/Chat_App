@@ -1,38 +1,42 @@
+// server.js - Express + Socket.io chat server
 import express from 'express'
 import cors from 'cors'
 import { Server } from 'socket.io'
 import http from 'http'
 
-const app = express();
-app.use(cors());
-const server = http.createServer(app);
-    app.get("/", (req, res) => {
-  res.send("<h1>Server is Running Successfully! </h1>");
-});
+const app = express(); // Express app
+const server = http.createServer(app); // HTTP server for Socket.io integration
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",              
-      "https://chat-app-socket-io-mj0n.onrender.com/" // ADD YOUR NEW RENDER FRONTEND LINK HERE
-    ],
-    methods: ["GET", "POST"],
+    origin: "http://localhost:5173",
+    methods: ["GET", "PUT"],
   },
 });
-io.on("connection",(socket)=>{console.log(socket.id)
-    socket.on("join_room",(data)=>{
-        socket.join(data);
-        console.log(`User ID :- ${socket.id} joined room : ${data}`)
-    })
 
+// Socket.io connection handling
+io.on("connection", (socket) => {
+  console.log('New socket connected:', socket.id)
 
-    socket.on("send_message",(data)=>{console.log("send message data ",data)
-    socket.to(data.room).emit("receive_message",data)
-})
+  // join a chat room
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`User ID: ${socket.id} joined room: ${room}`)
+  })
 
-    socket.on("disconnect",()=>{
-        console.log("User Disconnected..",socket.id)
-    })
+  // relay messages to room
+  socket.on("send_message", (data) => {
+    console.log("send message data", data)
+    socket.to(data.room).emit("receive_message", data)
+  })
+
+  // handle disconnect
+  socket.on("disconnect", () => {
+    console.log("User Disconnected:", socket.id)
+  })
 });
-// Listen on Railway's dynamic port
-const PORT = process.env.PORT || 1000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// middleware
+app.use(cors());
+
+// start server
+server.listen(1000, () => console.log("Server is running on port 1000"));

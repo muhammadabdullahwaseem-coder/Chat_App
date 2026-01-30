@@ -1,26 +1,19 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "type": "module",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^4.22.1",
-    "socket.io": "^4.8.3"
-  },
-  "description": "\"# Server-Socket-io-Chat-app\"",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app/issues"
-  },
-  "homepage": "https://github.com/muhammadabdullahwaseem-coder/Server-Socket-io-Chat-app#readme"
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.11",
+    "socket.io": "^4.8.3"
+  }
 }
