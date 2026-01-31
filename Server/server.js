@@ -4,10 +4,16 @@ import { Server } from 'socket.io';
 import http from 'http';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';       
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Create Express app
 const app = express();
 app.use(cors());
 app.use(express.json());
