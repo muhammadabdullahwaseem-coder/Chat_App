@@ -13,10 +13,16 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+
 // Create Express app
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("<h1>Server is Live and Running!</h1>");
+});
 
 // --- DEBUGGER: Check if .env is loaded ---
 console.log("---------------------------------------------------");
