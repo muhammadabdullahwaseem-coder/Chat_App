@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import music from "../src/assets/abcd.mp3";
+import music from './assets/abcd.mp3';
 import notificationSound from './notification.mp3';
 
 export const Chat = ({ socket, username, room }) => {
@@ -7,19 +7,25 @@ export const Chat = ({ socket, username, room }) => {
   const [messageList, setMessageList] = useState([]);
   const notification = new Audio(music);
   const containRef = useRef(null);
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (currentMessage !== "" && currentMessage !== " ") {
       const messageData = {
         id: Math.random(),
         room: room,
         author: username,
         message: currentMessage,
-        time:
-          (new Date(Date.now()).getHours() % 12) +
-          ":" +
-          new Date(Date.now()).getMinutes(),
+        time: (() => {
+          const d = new Date();
+          const hours = d.getHours();
+          const minutes = d.getMinutes().toString().padStart(2, '0');
+          const hrs12 = hours % 12 === 0 ? 12 : hours % 12;
+          const ampm = hours >= 12 ? 'PM' : 'AM';
+          return `${hrs12}:${minutes} ${ampm}`;
+        })(),
       };
-      await socket.emit("send_message", messageData);
+      if (socket) {
+        socket.emit("send_message", messageData);
+      }
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
       notification.play();
