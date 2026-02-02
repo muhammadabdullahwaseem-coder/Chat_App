@@ -7,22 +7,23 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Ensure required environment variables are present
+// Load environment variables and validate required configuration
 if (!process.env.MONGO_URL) {
   console.error("❌ ERROR: MONGO_URL is missing. Add it to your .env and restart the server.");
   process.exit(1);
 }
 
 const app = express();
+// Enable CORS and JSON body parsing for incoming requests
 app.use(cors());
 app.use(express.json());
 
-// 1. DB Connection
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ DB Error:", err));
 
-// Message schema & model
+// Message schema & model for storing chat messages
 const messageSchema = new mongoose.Schema({
   room: String,
   author: String,
@@ -32,11 +33,13 @@ const messageSchema = new mongoose.Schema({
 
 const Message = mongoose.model('Message', messageSchema);
 
-// Configure allowed client origins via environment variable (comma-separated)
+
+// Parse allowed client origins from environment or use default
 const allowedOrigins = (process.env.CLIENT_URLS || "http://localhost:5173").split(',').map(s => s.trim());
 
 const server = http.createServer(app);
 
+// Initialize Socket.IO server with CORS settings
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
@@ -44,10 +47,12 @@ const io = new Server(server, {
   },
 });
 
+// Handle new Socket.IO connections and register event listeners
 io.on("connection", (socket) => {
   console.log(`🔌 New Connection: ${socket.id}`);
 
   socket.on("join_room", async (room) => {
+    // Join the socket to the requested chat room and send message history
     socket.join(room);
     console.log(`User ${socket.id} joined room: ${room}`);
     try {
@@ -60,16 +65,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", async (data) => {
+    // Validate payload
     console.log(`Received message for room: ${data?.room}`);
     if (!data || !data.room || !data.message) {
       socket.emit('error', { message: 'Invalid message payload' });
       return;
     }
 
-    // Broadcast to other clients in the room
+    // Broadcast message to other clients in the room
     socket.to(data.room).emit("receive_message", data);
 
-    // Persist message and acknowledge sender with metadata
+    // Persist message to DB
     try {
       const newMessage = new Message({
         room: data.room,
@@ -87,14 +93,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    // Clean up when a client disconnects
     console.log("User Disconnected:", socket.id);
   });
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// Start HTTP server
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log('Server is running');
+});
 
-// Graceful shutdown
+// Graceful shutdown handler
 const shutdown = async (signal) => {
   try {
     console.log(`\nReceived ${signal}. Shutting down gracefully...`);
