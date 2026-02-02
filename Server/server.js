@@ -105,6 +105,10 @@ server.listen(PORT, () => {
   console.log('Server is running');
 });
 
+app.get('/', (req, res) => res.send('Server is running'));
+app.get('/health', (req, res) => res.json({ status: 'running' }));
+
+
 // Graceful shutdown handler
 const shutdown = async (signal) => {
   try {
